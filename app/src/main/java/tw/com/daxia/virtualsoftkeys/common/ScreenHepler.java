@@ -17,6 +17,7 @@ public class ScreenHepler {
     private final static int DEFAULT_TOUCHVIEW_HEIGHT_DP = 10;
     private final static int DEFAULT_TOUCHVIEW_WIDTH = ViewGroup.LayoutParams.MATCH_PARENT;
     private final static int DEFAULT_BARVIEW_HEIGHT_DP = 20;
+    private final static int DEFAULT_BARVIEW_SPAN_WIDTH_DP = 30;
 
 
     public static int dpToPixel(final Resources r, final int dp) {
@@ -39,12 +40,16 @@ public class ScreenHepler {
         return dpToPixel(context.getResources(), DEFAULT_TOUCHVIEW_HEIGHT_DP);
     }
 
+    public static int getDefautlTouchviewWidth() {
+        return DEFAULT_TOUCHVIEW_WIDTH;
+    }
+
     public static int getDefautlBarviewHeight(Context context) {
         return dpToPixel(context.getResources(), DEFAULT_BARVIEW_HEIGHT_DP);
     }
 
-    public static int getDefautlTouchviewWidth() {
-        return DEFAULT_TOUCHVIEW_WIDTH;
+    public static int getDefautlBarviewSpanWidth(Context context) {
+        return dpToPixel(context.getResources(), DEFAULT_BARVIEW_SPAN_WIDTH_DP);
     }
 
     public static boolean isPortrait(Resources resources) {

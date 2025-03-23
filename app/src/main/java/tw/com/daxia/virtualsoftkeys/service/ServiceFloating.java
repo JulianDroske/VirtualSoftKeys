@@ -188,14 +188,17 @@ public class ServiceFloating extends AccessibilityService {
         }
     }
 
-    public void updateBarView(@Nullable Integer heightPx) {
+    public void updateBarView(@Nullable Integer heightPx, @Nullable Integer spanWidthPx) {
         //set config
         if (softKeyBar != null) {
-            WindowManager.LayoutParams params = (WindowManager.LayoutParams) softKeyBar.getBaseView().getLayoutParams();
             if (heightPx != null) {
+                WindowManager.LayoutParams params = (WindowManager.LayoutParams) softKeyBar.getBaseView().getLayoutParams();
                 params.height = heightPx;
+                softKeyBar.updateParamsForLocation(windowManager, params);
             }
-            softKeyBar.updateParamsForLocation(windowManager, params);
+            if (spanWidthPx != null) {
+                softKeyBar.updateSpanWidth(spanWidthPx);
+            }
         }
     }
 
@@ -230,7 +233,7 @@ public class ServiceFloating extends AccessibilityService {
         if (softKeyBar == null) {
             initBarView();
             windowManager.addView(softKeyBar.getBaseView(), softKeyBar.getLayoutParamsForLocation());
-            softKeyBar.initParamsForLocation(windowManager, isPortrait);
+            softKeyBar.initAllParams(windowManager, isPortrait);
         } else {
             softKeyBar.getBaseView().setVisibility(View.VISIBLE);
         }

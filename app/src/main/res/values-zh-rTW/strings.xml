@@ -25,6 +25,8 @@
     <string name="setting_gesture_position_content">用來觸發手勢的區域位置</string>
     <string name="setting_bar_height_title">導航欄高度:</string>
     <string name="setting_bar_height_content">導航欄的實際高度</string>
+    <string name="setting_bar_span_width_title">鍵間距大小</string>
+    <string name="setting_bar_span_width_content">導航欄各鍵之間的大小</string>
 
     <string name="setting_stylus_mode_title">觸控筆模式:</string>
     <string name="setting_stylus_mode_content">只允許系統支援的觸控筆觸發手勢 (S Pen,z stylus&#8230;etc)</string>

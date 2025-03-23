@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.ImageButton;
 
 import tw.com.daxia.virtualsoftkeys.common.SPFManager;
@@ -24,7 +26,7 @@ public abstract class SoftKeyView {
     /*
      * View
      */
-    protected View baseView;
+    protected ViewGroup baseView;
     protected ImageButton IB_button_start, IB_button_end, IB_button_home;
     protected ServiceFloating accessibilityService;
     /*
@@ -186,13 +188,16 @@ public abstract class SoftKeyView {
      * The  public  method
      */
 
-    public void initParamsForLocation(WindowManager windowManager, Boolean isPortrait) {
-        int barHeightPx = 0;
+    public void initAllParams(WindowManager windowManager, Boolean isPortrait) {
+        int spanWidthPx = 0, barHeightPx = 0;
         if (isPortrait) {
+            spanWidthPx = SPFManager.getBarviewPortraitSpanWidth(accessibilityService);
             barHeightPx = SPFManager.getBarviewPortraitHeight(accessibilityService);
         } else {
+            spanWidthPx = SPFManager.getBarviewLandscapeSpanWidth(accessibilityService);
             barHeightPx = SPFManager.getBarviewLandscapeHeight(accessibilityService);
         }
+        this.updateSpanWidth(spanWidthPx);
         WindowManager.LayoutParams params = (WindowManager.LayoutParams) baseView.getLayoutParams();
         params.height = barHeightPx;
         this.updateParamsForLocation(windowManager, params);
@@ -200,6 +205,13 @@ public abstract class SoftKeyView {
 
     public void updateParamsForLocation(WindowManager windowManager, WindowManager.LayoutParams params) {
         windowManager.updateViewLayout(baseView, params);
+    }
+
+    public void updateSpanWidth(int spanWidthPx) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) IB_button_home.getLayoutParams();
+        params.setMargins(spanWidthPx, 0, spanWidthPx, 0);
+        // baseView.updateViewLayout(IB_button_home, params);
+        IB_button_home.setLayoutParams(params);
     }
 
     public View getBaseView() {

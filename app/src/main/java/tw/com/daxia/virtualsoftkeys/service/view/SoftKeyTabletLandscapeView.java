@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 
@@ -31,7 +32,7 @@ public class SoftKeyTabletLandscapeView extends SoftKeyView {
     @Override
     void initBaseView() {
         LayoutInflater li = LayoutInflater.from(accessibilityService);
-        this.baseView = li.inflate(R.layout.navigation_bar_t_l, null, true);
+        this.baseView = (ViewGroup) li.inflate(R.layout.navigation_bar_t_l, null, true);
         this.IB_button_home = (ImageButton) baseView.findViewById(R.id.IB_button_home);
         this.IB_button_start = (ImageButton) baseView.findViewById(R.id.IB_button_start);
         this.IB_button_end = (ImageButton) baseView.findViewById(R.id.IB_button_end);
