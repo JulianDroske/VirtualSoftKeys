@@ -17,10 +17,12 @@ public class SPFManager {
     private static final String CONFIG_P_TOUCHVIEW_HEIGHT = "P_TOUCHVIEW_HEIGHT";
     private static final String CONFIG_P_TOUCHVIEW_WIDTH = "P_TOUCHVIEW_WIDTH";
     private static final String CONFIG_P_TOUCHVIEW_POSITION = "P_TOUCHVIEW_POSITION";
+    private static final String CONFIG_P_BARVIEW_HEIGHT = "P_BARVIEW_HEIGHT";
     //Landscape config
     private static final String CONFIG_L_TOUCHVIEW_HEIGHT = "L_TOUCHVIEW_HEIGHT";
     private static final String CONFIG_L_TOUCHVIEW_WIDTH = "L_TOUCHVIEW_WIDTH";
     private static final String CONFIG_L_TOUCHVIEW_POSITION = "L_TOUCHVIEW_POSITION";
+    private static final String CONFIG_L_BARVIEW_HEIGHT = "L_BARVIEW_HEIGHT";
 
     //Shared config
     private static final String CONFIG_STYLUS_ONLY_MODE = "STYLUS_ONLY_MODE";
@@ -88,6 +90,18 @@ public class SPFManager {
         PE.commit();
     }
 
+    public static int getBarviewPortraitHeight(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        return settings.getInt(CONFIG_P_BARVIEW_HEIGHT, ScreenHepler.getDefautlBarviewHeight(context));
+    }
+
+    public static void setBarviewPortraitHeight(Context context, int heightPx) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        SharedPreferences.Editor PE = settings.edit();
+        PE.putInt(CONFIG_P_BARVIEW_HEIGHT, heightPx);
+        PE.commit();
+    }
+
     /**
      * Landscape Setting Method
      */
@@ -126,6 +140,18 @@ public class SPFManager {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         SharedPreferences.Editor PE = settings.edit();
         PE.putInt(CONFIG_L_TOUCHVIEW_POSITION, position);
+        PE.commit();
+    }
+
+    public static int getBarviewLandscapeHeight(Context context) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        return settings.getInt(CONFIG_L_BARVIEW_HEIGHT, ScreenHepler.getDefautlBarviewHeight(context));
+    }
+
+    public static void setBarviewLandscapeHeight(Context context, int heightPx) {
+        SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
+        SharedPreferences.Editor PE = settings.edit();
+        PE.putInt(CONFIG_L_BARVIEW_HEIGHT, heightPx);
         PE.commit();
     }
 
@@ -196,7 +222,7 @@ public class SPFManager {
         PE.commit();
     }
 
-  public static boolean getRotateHidden(Context context) {
+    public static boolean getRotateHidden(Context context) {
         SharedPreferences settings = context.getSharedPreferences(SPF_CONFIG_NEME, 0);
         return settings.getBoolean(CONFIG_ROTATE_HIDDEN, false);
     }

@@ -97,18 +97,18 @@ public class ServiceFloating extends AccessibilityService {
         rotateHidden = SPFManager.getRotateHidden(this);
         updateServiceInfo(SPFManager.getSmartHidden(this));
         //Check permission & orientation
-       boolean canDrawOverlays = PermissionUtils.checkSystemAlertWindowPermission(this);
-        if (canDrawOverlays) {
-            windowManager = (WindowManager) getSystemService(Service.WINDOW_SERVICE);
-            if (ScreenHepler.isPortrait(getResources())) {
-                isPortrait = true;
+        boolean canDrawOverlays = PermissionUtils.checkSystemAlertWindowPermission(this);
+            if (canDrawOverlays) {
+                windowManager = (WindowManager) getSystemService(Service.WINDOW_SERVICE);
+                if (ScreenHepler.isPortrait(getResources())) {
+                    isPortrait = true;
+                } else {
+                    isPortrait = false;
+                }
+                initTouchView();
             } else {
-                isPortrait = false;
+                Toast.makeText(this, getString(R.string.Toast_allow_system_alert_first), Toast.LENGTH_LONG).show();
             }
-            initTouchView();
-        } else {
-            Toast.makeText(this, getString(R.string.Toast_allow_system_alert_first), Toast.LENGTH_LONG).show();
-        }
     }
 
     @Override
@@ -157,7 +157,11 @@ public class ServiceFloating extends AccessibilityService {
 
     private void initTouchView() {
         touchEventView = new TouchEventView(this);
-        touchEventView.updateParamsForLocation(windowManager,isPortrait);
+        touchEventView.initParamsForLocation(windowManager, isPortrait);
+    }
+
+    private void initBarView() {
+        softKeyBar = new SoftKeyTabletLandscapeView(this);
     }
 
 
@@ -180,7 +184,18 @@ public class ServiceFloating extends AccessibilityService {
             if (position != null) {
                 params.x = position;
             }
-            touchEventView.updateParamsForLocation(windowManager,params);
+            touchEventView.updateParamsForLocation(windowManager, params);
+        }
+    }
+
+    public void updateBarView(@Nullable Integer heightPx) {
+        //set config
+        if (softKeyBar != null) {
+            WindowManager.LayoutParams params = (WindowManager.LayoutParams) softKeyBar.getBaseView().getLayoutParams();
+            if (heightPx != null) {
+                params.height = heightPx;
+            }
+            softKeyBar.updateParamsForLocation(windowManager, params);
         }
     }
 
@@ -213,8 +228,9 @@ public class ServiceFloating extends AccessibilityService {
 
     public void showSoftKeyBar() {
         if (softKeyBar == null) {
-            softKeyBar = new SoftKeyTabletLandscapeView(this);
+            initBarView();
             windowManager.addView(softKeyBar.getBaseView(), softKeyBar.getLayoutParamsForLocation());
+            softKeyBar.initParamsForLocation(windowManager, isPortrait);
         } else {
             softKeyBar.getBaseView().setVisibility(View.VISIBLE);
         }

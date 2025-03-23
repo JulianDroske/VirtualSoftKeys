@@ -7,5 +7,8 @@
     <color name="config_portrait_color">#ff0000</color>
     <color name="config_landscape_color">#1e90ff</color>
 
+    <color name="config_portrait_alt_color">#ff8800</color>
+    <color name="config_landscape_alt_color">#881eff</color>
+
 
 </resources>

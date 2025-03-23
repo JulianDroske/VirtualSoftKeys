@@ -64,7 +64,7 @@ public class TouchEventView implements View.OnTouchListener {
         miniTouchGestureHeight = heightPx / MINI_TOUCH_GESTURE_HIEGHT_SENSITIVITY;
     }
 
-    public void updateParamsForLocation(WindowManager windowManager, Boolean isPortrait) {
+    public void initParamsForLocation(WindowManager windowManager, Boolean isPortrait) {
         if (isPortrait) {
             miniTouchGestureHeight = SPFManager.getTouchviewPortraitHeight(accessibilityService) / MINI_TOUCH_GESTURE_HIEGHT_SENSITIVITY;
             //transparent color

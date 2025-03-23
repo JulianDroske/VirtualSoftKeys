@@ -185,6 +185,23 @@ public abstract class SoftKeyView {
     /*
      * The  public  method
      */
+
+    public void initParamsForLocation(WindowManager windowManager, Boolean isPortrait) {
+        int barHeightPx = 0;
+        if (isPortrait) {
+            barHeightPx = SPFManager.getBarviewPortraitHeight(accessibilityService);
+        } else {
+            barHeightPx = SPFManager.getBarviewLandscapeHeight(accessibilityService);
+        }
+        WindowManager.LayoutParams params = (WindowManager.LayoutParams) baseView.getLayoutParams();
+        params.height = barHeightPx;
+        this.updateParamsForLocation(windowManager, params);
+    }
+
+    public void updateParamsForLocation(WindowManager windowManager, WindowManager.LayoutParams params) {
+        windowManager.updateViewLayout(baseView, params);
+    }
+
     public View getBaseView() {
         return baseView;
     }

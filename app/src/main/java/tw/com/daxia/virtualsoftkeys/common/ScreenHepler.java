@@ -16,6 +16,7 @@ public class ScreenHepler {
 
     private final static int DEFAULT_TOUCHVIEW_HEIGHT_DP = 10;
     private final static int DEFAULT_TOUCHVIEW_WIDTH = ViewGroup.LayoutParams.MATCH_PARENT;
+    private final static int DEFAULT_BARVIEW_HEIGHT_DP = 20;
 
 
     public static int dpToPixel(final Resources r, final int dp) {
@@ -36,6 +37,10 @@ public class ScreenHepler {
 
     public static int getDefautlTouchviewHeight(Context context) {
         return dpToPixel(context.getResources(), DEFAULT_TOUCHVIEW_HEIGHT_DP);
+    }
+
+    public static int getDefautlBarviewHeight(Context context) {
+        return dpToPixel(context.getResources(), DEFAULT_BARVIEW_HEIGHT_DP);
     }
 
     public static int getDefautlTouchviewWidth() {

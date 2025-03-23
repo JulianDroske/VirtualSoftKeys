@@ -42,7 +42,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private final static String TAG = "MainActivity";
-    private final static int MAX_HEIGHT_PERCENTAGE = 20;
+    private final static int MAX_HEIGHT_PERCENTAGE = 15;
+    private final static int MAX_BAR_HEIGHT_PERCENTAGE = 5;
     private final static String descriptionDialogTAG = "descriptionDialog";
     private final static String permissionDialogTAG = "permissionDialog";
     private final static String accessibilityServiceDialogTAG = "accessibilityServiceDialog";
@@ -50,7 +51,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * UI
      */
-    private SeekBar Seek_touch_area_height, Seek_touch_area_width;
+    private SeekBar Seek_touch_area_height, Seek_touch_area_width,
+            Seek_bar_height;
     private SeekBar Seek_touch_area_position;
     private TextView TV_config_name;
     private CheckedTextView CTV_stylus_only_mode,
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             CTV_smart_hidden, CTV_hidden_when_rotate;
     private Spinner SP_bar_disappear_time;
 
-    private View View_touchviewer;
+    private View View_touchviewer, View_barviewer;
     private ImageView IV_bg_color, IV_my_github;
 
     /**
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         View_touchviewer = findViewById(R.id.View_touchviewer);
+        View_barviewer = findViewById(R.id.View_barviewer);
 
         TV_config_name = (TextView) findViewById(R.id.TV_config_name);
 
@@ -100,6 +103,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Seek_touch_area_position = (SeekBar) findViewById(R.id.Seek_touch_area_position);
         Seek_touch_area_position.setOnSeekBarChangeListener(touchviewPositionSeekBarListener);
         Seek_touch_area_position.setSaveEnabled(false);
+
+        Seek_bar_height = (SeekBar) findViewById(R.id.Seek_bar_height);
+        Seek_bar_height.setOnSeekBarChangeListener(barviewHeightSeekBarListener);
+        Seek_bar_height.setSaveEnabled(false);
 
         CTV_stylus_only_mode = (CheckedTextView) findViewById(R.id.CTV_stylus_only_mode);
         SP_bar_disappear_time = (Spinner) findViewById(R.id.SP_bar_disappear_time);
@@ -294,30 +301,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initSeekBarStyle() {
-        int configColor;
+        int configColor, configAltColor;
         if (isPortrait) {
             TV_config_name.setText(getString(R.string.config_name_portrait));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 configColor = getResources().getColor(R.color.config_portrait_color, this.getTheme());
+                configAltColor = getResources().getColor(R.color.config_portrait_alt_color, this.getTheme());
             } else {
                 configColor = getResources().getColor(R.color.config_portrait_color);
+                configAltColor = getResources().getColor(R.color.config_portrait_alt_color);
             }
         } else {
             TV_config_name.setText(getString(R.string.config_name_landscape));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 configColor = getResources().getColor(R.color.config_landscape_color, this.getTheme());
+                configAltColor = getResources().getColor(R.color.config_landscape_alt_color, this.getTheme());
             } else {
                 configColor = getResources().getColor(R.color.config_landscape_color);
+                configAltColor = getResources().getColor(R.color.config_landscape_alt_color);
             }
         }
         TV_config_name.setTextColor(configColor);
         View_touchviewer.setBackgroundColor(configColor);
+        View_barviewer.setBackgroundColor(configAltColor);
         Seek_touch_area_height.getProgressDrawable().setColorFilter(new PorterDuffColorFilter(configColor, PorterDuff.Mode.SRC_IN));
         Seek_touch_area_height.getThumb().setColorFilter(new PorterDuffColorFilter(configColor, PorterDuff.Mode.SRC_IN));
         Seek_touch_area_width.getProgressDrawable().setColorFilter(new PorterDuffColorFilter(configColor, PorterDuff.Mode.SRC_IN));
         Seek_touch_area_width.getThumb().setColorFilter(new PorterDuffColorFilter(configColor, PorterDuff.Mode.SRC_IN));
         Seek_touch_area_position.getProgressDrawable().setColorFilter(new PorterDuffColorFilter(configColor, PorterDuff.Mode.SRC_IN));
         Seek_touch_area_position.getThumb().setColorFilter(new PorterDuffColorFilter(configColor, PorterDuff.Mode.SRC_IN));
+        Seek_bar_height.getProgressDrawable().setColorFilter(new PorterDuffColorFilter(configAltColor, PorterDuff.Mode.SRC_IN));
+        Seek_bar_height.getThumb().setColorFilter(new PorterDuffColorFilter(configAltColor, PorterDuff.Mode.SRC_IN));
     }
 
     private void initSeekBarContent() {
@@ -330,6 +344,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Default width init
         Seek_touch_area_width.setMax(screenWidth);
+
+        //Default bar height init
+        Seek_bar_height.setMax(screenHeight / MAX_BAR_HEIGHT_PERCENTAGE);
 
         if (isPortrait) {
             touchviewWidth = SPFManager.getTouchviewPortraitWidth(this);
@@ -346,6 +363,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //set position
                 updateTouchViewPosition(touchviewWidth, SPFManager.getTouchviewPortraitPosition(this));
             }
+            Seek_bar_height.setProgress(SPFManager.getBarviewPortraitHeight(this));
         } else {
             touchviewWidth = SPFManager.getTouchviewLandscapeWidth(this);
             //Height
@@ -361,6 +379,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //set position
                 updateTouchViewPosition(touchviewWidth, SPFManager.getTouchviewLandscapePosition(this));
             }
+            Seek_bar_height.setProgress(SPFManager.getBarviewLandscapeHeight(this));
         }
 
 
@@ -475,6 +494,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) View_touchviewer.getLayoutParams();
             params.setMarginStart(progress);
             View_touchviewer.setLayoutParams(params);
+        }
+    };
+
+    private SeekBar.OnSeekBarChangeListener barviewHeightSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            if (isPortrait) {
+                SPFManager.setBarviewPortraitHeight(MainActivity.this, seekBar.getProgress());
+            } else {
+                SPFManager.setBarviewLandscapeHeight(MainActivity.this, seekBar.getProgress());
+            }
+            ServiceFloating mAccessibilityService = ServiceFloating.getSharedInstance();
+            if (mAccessibilityService != null) {
+                mAccessibilityService.updateBarView(seekBar.getProgress());
+                mAccessibilityService = null;
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) View_barviewer.getLayoutParams();
+            params.height = progress;
+            View_barviewer.setLayoutParams(params);
         }
     };
 
